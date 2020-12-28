@@ -1,16 +1,13 @@
+from configparser import ConfigParser
 import time
 import adafruit_dht
 import board
 
-dht = adafruit_dht.DHT22(board.D4)
-
-while True:
-    try:
-        temperature = dht.temperature
-        humidity = dht.humidity
-        print(f"Temp {temperature} C \t Humitity: {humidity}%")
-    except RuntimeError as e:
-        # Reading doesn't always work! Just print error and we'll try again
-        print("Reading from DHT failure: ", e.args)
-
-    time.sleep(10)
+config = ConfigParser()
+config.read("setting.ini")
+PIN_TEMP = config.get("pins", "pin_thermometer")
+PIN_WATER_PUMP = config.get("pins", "pin_water_pump")
+PIN_SOIL_MOISTURE_SENSOR = config.get("pins", "pin_mcp_soil_moisture_sensor")
+print(PIN_TEMP)
+print(PIN_WATER_PUMP)
+print(PIN_SOIL_MOISTURE_SENSOR)
