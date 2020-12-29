@@ -3,7 +3,6 @@ import time
 
 import board
 import RPi.GPIO as GPIO
-import adafruit_dht
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 import busio
@@ -41,7 +40,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_WATER_PUMP, GPIO.OUT, initial=1)
 
 # Set default value for soil moisture sensor, max value
-voltage = 5.00
+voltage = round(chan.voltage, SM_VOLTAGE_ROUND)
 while voltage>SM_VOLTAGE_MIN:
     GPIO.output(PIN_WATER_PUMP, 0)
     time.sleep(WATER_TIME)
