@@ -20,6 +20,7 @@ WATER_TIME = config.getint("settings", "water_time")
 # Test iterator
 i = 5
 v = 0
+sleep_time = 5
 # Test 1
 print("TEST 1 PUMP")
 GPIO.setwarnings(False)
@@ -29,6 +30,7 @@ while v<=i:
     GPIO.output(PIN_WATER_PUMP, 0)
     time.sleep(WATER_TIME)
     GPIO.output(PIN_WATER_PUMP, 1)
+    time.sleep(sleep_time)
     v = v + 1
 
 v = 0
@@ -46,7 +48,7 @@ cs = digitalio.DigitalInOut(board.CE0)
 # create the mcp object
 mcp = MCP.MCP3008(spi, cs)
 # create an analog input channel on pin 0
-chan = AnalogIn(mcp, MCP.P0)
+chan = AnalogIn(mcp, MCP.PIN_SOIL_MOISTURE_SENSOR)
 
 while v<=i:
    print('Raw ADC Value: ', chan.value)
