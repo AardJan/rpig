@@ -15,49 +15,36 @@ import helper as h
 config = ConfigParser()
 config.read("settings.ini")
 PIN_WATER_PUMP = config.getint("pins", "pin_water_pump")
-PIN_SOIL_MOISTURE_SENSOR = config.get("pins", "pin_mcp_soil_moisture_sensor")
+PIN_SM_SENSOR = config.get("pins", "pin_mcp_SM_sensor")
 WATER_TIME = config.getint("settings", "water_time")
+SM_VOLTAGE_MIN = config.getfloat("settings", "v_min")
+SM_VOLTAGE_ROUND = config.getint("settings", "v_round")
+SM_SLEEP_TIME = config.getint("settings", "SM_sleep_time")
 
-# Test iterator
-i = 5
-v = 0
-sleep_time = 5
-# Test 1
-print("TEST 1 PUMP")
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PIN_WATER_PUMP, GPIO.OUT,
+            initial=1)
+# Create the spi bus
+spi = busio.SPI(clock=board.SCK,MISO=board.MISO,
+                MOSI=board.MOSI)
+# Create the cs (chip select CE0 or CE1)
+cs = digitalio.DigitalInOut(board.CE0)
+# Create the mcp object
+mcp = MCP.MCP3008(spi, cs)
+# Create an analog input channel on pin from config
+chan = AnalogIn(mcp, h.get_pin_MCP(PIN_SM_SENSOR))
+
+# Setup GPIO for water pump and init with hight value
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_WATER_PUMP, GPIO.OUT, initial=1)
-while v<=i:
+
+# Set default value for soil moisture sensor, max value
+voltage = 5.00
+while voltage>SM_VOLTAGE_MIN:
     GPIO.output(PIN_WATER_PUMP, 0)
     time.sleep(WATER_TIME)
     GPIO.output(PIN_WATER_PUMP, 1)
-    time.sleep(sleep_time)
-    v = v + 1
-
-v = 0
-
-print("END TEST 1")
-print("")
-
-# Test 2
-print("TEST 2 SOIL MOISTURE")
-# create the spi bus
-spi = busio.SPI(clock=board.SCK,
-                MISO=board.MISO,
-                MOSI=board.MOSI)
-# create the cs (chip select)
-cs = digitalio.DigitalInOut(board.CE0)
-# create the mcp object
-mcp = MCP.MCP3008(spi, cs)
-# create an analog input channel on pin 0
-chan = AnalogIn(mcp, h.get_pin_MCP(PIN_SOIL_MOISTURE_SENSOR))
-
-while v<=i:
-   print("Raw ADC Value: ", chan.value)
-   print("ADC Voltage: " + str(chan.voltage) + "V")
-   time.sleep(5)
-   v = v + 1
-
-v = 0
-print("END TEST 2")
-
+    time.sleep(SM_SLEEP_TIME)
+    voltage = round(chan.voltage, SM_VOLTAGE_ROUND)
