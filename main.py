@@ -9,35 +9,15 @@ from adafruit_mcp3xxx.analog_in import AnalogIn
 import busio
 import digitalio
 
+import helper as h
+
 # Read config.ini
 config = ConfigParser()
 config.read("settings.ini")
-PIN_TEMP = config.get("pins", "pin_thermometer")
 PIN_WATER_PUMP = config.getint("pins", "pin_water_pump")
 PIN_SOIL_MOISTURE_SENSOR = config.get("pins", "pin_mcp_soil_moisture_sensor")
 WATER_TIME = config.getint("settings", "water_time")
 
-def get_pin_MCP(pin_value):
-    if pin_value == "P0":
-        return MCP.P0
-    elif pin_value == "P1":
-        return MCP.P1
-    elif pin_value == "P2":
-        return MCP.P2    
-    elif pin_value == "P3":
-        return MCP.P3
-    elif pin_value == "P4":
-        return MCP.P4
-    elif pin_value == "P5":
-        return MCP.P5
-    elif pin_value == "P6":
-        return MCP.P6
-    elif pin_value == "P7":
-        return MCP.P7
-    elif pin_value == "P8":
-        return MCP.P8
-    else:
-        raise "Wrong ping number"
 # Test iterator
 i = 5
 v = 0
@@ -55,6 +35,7 @@ while v<=i:
     v = v + 1
 
 v = 0
+
 print("END TEST 1")
 print("")
 
@@ -69,11 +50,11 @@ cs = digitalio.DigitalInOut(board.CE0)
 # create the mcp object
 mcp = MCP.MCP3008(spi, cs)
 # create an analog input channel on pin 0
-chan = AnalogIn(mcp, get_pin_MCP(PIN_SOIL_MOISTURE_SENSOR))
+chan = AnalogIn(mcp, h.get_pin_MCP(PIN_SOIL_MOISTURE_SENSOR))
 
 while v<=i:
-   print('Raw ADC Value: ', chan.value)
-   print('ADC Voltage: ' + str(chan.voltage) + 'V')
+   print("Raw ADC Value: ", chan.value)
+   print("ADC Voltage: " + str(chan.voltage) + "V")
    time.sleep(5)
    v = v + 1
 

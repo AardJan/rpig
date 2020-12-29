@@ -2,8 +2,14 @@ import time
 import adafruit_dht
 import board
 import Rpi.GPIO as GPIO
+import helper as h
 
-dht = adafruit_dht.DHT22(board.D4)
+
+config = ConfigParser()
+config.read("settings.ini")
+PIN_TEMP = config.get("pins", "pin_thermometer")
+
+dht = adafruit_dht.DHT22(h.get_pin_board(PIN_TEMP))
 
 while True:
     try:
