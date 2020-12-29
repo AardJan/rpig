@@ -1,7 +1,9 @@
 import time
+from configparser import ConfigParser
+
 import adafruit_dht
 import board
-import Rpi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import helper as h
 
 
