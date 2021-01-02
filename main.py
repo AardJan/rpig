@@ -35,8 +35,6 @@ mcp = MCP.MCP3008(spi, cs)
 chan = AnalogIn(mcp, h.get_pin_MCP(PIN_SM_SENSOR))
 
 # Setup GPIO for water pump and init with hight value
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_WATER_PUMP, GPIO.OUT, initial=1)
 
 # Set default value for soil moisture sensor, max value
