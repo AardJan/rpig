@@ -1,0 +1,5 @@
+/rpig_venv
+.vscode
+.Trash-*
+__pycache__
+rpig_workspace.code-workspace
