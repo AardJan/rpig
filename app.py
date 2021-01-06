@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import get_info_data as gid
 
 app = Flask(__name__)
@@ -15,6 +15,12 @@ def home():
 @app.route("/temp")
 def temp():
     return render_template()
+
+@app.route("/api/iot", methods=['GET', 'POST'])
+def api_iot():
+    content_json = request.json
+    print(content_json)
+    return "ok"
     
 if __name__ == "__main__":
     app.run(host='192.168.0.101', port=5001)
